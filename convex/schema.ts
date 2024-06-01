@@ -9,7 +9,7 @@ export default defineSchema({
     podcastTitle: v.string(),
     podcastDescription: v.string(),
     audioUrl: v.optional(v.string()),
-    imgUrl: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
     author: v.string(),
     authorId: v.string(),
     authorImageUrl: v.string(),

@@ -30,6 +30,10 @@ import { Textarea } from "@/components/ui/textarea";
 import GenerateThumbnail from "@/components/generate-thumbnail";
 import GeneratePodcast from "@/components/generate-podcast";
 import { Id } from "@/convex/_generated/dataModel";
+import { useToast } from "@/components/ui/use-toast";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   podcastTitle: z.string().min(2),
@@ -37,6 +41,9 @@ const formSchema = z.object({
 });
 
 const Page = () => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const createPodcast = useMutation(api.podcast.createPodcast);
   const [audioUrl, setAudioUrl] = useState<string>("");
   const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(
     null
@@ -57,11 +64,39 @@ const Page = () => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    try {
+      if (!audioUrl || !imageUrl || !voiceType) {
+        toast({
+          title: "Please generate audio and thumbnail",
+          variant: "destructive",
+        });
+        throw new Error("Please generate audio and thumbnail");
+      }
+      const res = await createPodcast({
+        podcastTitle: data.podcastTitle,
+        podcastDescription: data.podcastDescription,
+        audioUrl,
+        imageUrl,
+        voiceType,
+        imagePrompt,
+        voicePrompt,
+        views: 0,
+        audioDuration,
+        audioStorageId: audioStorageId!,
+        imageStorageId: imageStorageId!,
+      });
+      toast({
+        title: "Podcast Created Successfully",
+      });
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error Creating Podcast , Please try again later",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -137,7 +172,7 @@ const Page = () => {
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      className=" input-class focus-visible:ring-orange-1"
+                      className="input-class focus-visible:ring-offset-orange-1"
                       placeholder="Write a short podcast description"
                       {...field}
                     />
@@ -157,7 +192,13 @@ const Page = () => {
               setVoicePrompt={setVoicePrompt}
               setAudioDuration={setAudioDuration}
             />
-            <GenerateThumbnail />
+            <GenerateThumbnail
+              setImage={setImageUrl}
+              setImageStorageId={setImageStorageId}
+              setImagePrompt={setImagePrompt}
+              image={imageUrl}
+              imagePrompt={imagePrompt}
+            />
             <div className="mt-10 w-full">
               <Button
                 type="submit"
