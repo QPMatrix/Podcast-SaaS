@@ -1,44 +1,12 @@
 "use client";
 import { GeneratePodcastProps } from "@/types";
-import React, { useState } from "react";
+import React from "react";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader } from "lucide-react";
-import { useAction } from "convex/react";
-import { api } from "@/convex/_generated/api";
-const useGeneratePodcast = ({
-  setAudio,
-  voiceType,
-  voicePrompt,
-  setAudioStorageId,
-}: GeneratePodcastProps) => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const getPodCastAudio = useAction(api.openai.generateAudioAction);
-  const generatePodcast = async () => {
-    setIsGenerating(true);
-    setAudio("");
-    if (!voicePrompt) {
-      //TODO: Show error
-      return setIsGenerating(false);
-    }
-    try {
-      const res = await getPodCastAudio({
-        voice: voiceType,
-        input: voicePrompt,
-      });
-    } catch (error) {
-      console.log("error generating podcast", error);
-      //TODO: Show error
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-  return {
-    isGenerating,
-    generatePodcast,
-  };
-};
+
+import useGeneratePodcast from "@/hooks/use-generate-podcast";
 
 const GeneratePodcast = (props: GeneratePodcastProps) => {
   const { isGenerating, generatePodcast } = useGeneratePodcast(props);
@@ -59,7 +27,8 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
       <div className="mt-5 w-full max-w-[200px]">
         <Button
           type="submit"
-          className="h-16  bg-orange-1 py-4 font-bold text-white-1  "
+          className="h-16  bg-orange-1 py-4 font-bold text-white-1"
+          onClick={generatePodcast}
         >
           {isGenerating ? (
             <>
