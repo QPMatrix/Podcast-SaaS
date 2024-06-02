@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "descriptive-terrier-337.convex.cloud",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
     ],
   },
 };
