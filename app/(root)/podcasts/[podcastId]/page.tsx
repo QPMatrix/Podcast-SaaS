@@ -38,8 +38,8 @@ const Page = ({
       </header>
       <PodcastDetailsPlayer
         isOwner={isOwner!}
-        podcastId={podcast._id}
-        {...podcast}
+        podcastId={podcast._id!}
+        {...podcast!}
       />
       <p className="text-white-2 text-16 pb-8 pt-[45px] font-medium max-md:text-center">
         {podcast?.podcastDescription}
