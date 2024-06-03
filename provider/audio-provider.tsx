@@ -2,7 +2,7 @@
 
 import { AudioContextType, AudioProps } from "@/types";
 import { usePathname } from "next/navigation";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const AudioContext = createContext<AudioContextType | undefined>(
   undefined

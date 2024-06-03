@@ -2,7 +2,7 @@
 
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
-import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
+import { SignedIn, SignedOut, useClerk, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ const LeftSidebar = () => {
   const router = useRouter();
   const { signOut } = useClerk();
   const { audio } = useAudio();
+  const { user } = useUser();
 
   return (
     <section
@@ -53,6 +54,26 @@ const LeftSidebar = () => {
             </Link>
           );
         })}
+        <SignedIn>
+          <Link
+            href={`/profile/${user?.id}`}
+            className={cn(
+              "flex gap-3 items-center py-4 max-lg:px-4 justify-center lg:justify-start",
+              {
+                "bg-nav-focus border-r-4 border-orange-1":
+                  pathname === "/profile" || pathname.startsWith("/profile/"),
+              }
+            )}
+          >
+            <Image
+              src="/icons/profile.svg"
+              alt="profile"
+              width={24}
+              height={24}
+            />
+            <p>Profile</p>
+          </Link>
+        </SignedIn>
       </nav>
       <SignedOut>
         <div className="flex-center w-full pb-14 max-lg:px-4 lg:pr-8">

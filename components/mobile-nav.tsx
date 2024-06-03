@@ -11,8 +11,10 @@ import Link from "next/link";
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { SignedIn, useUser } from "@clerk/nextjs";
 const MobileNav = () => {
   const pathname = usePathname();
+  const user = useUser();
   return (
     <section>
       <Sheet>
@@ -36,36 +38,50 @@ const MobileNav = () => {
             </h1>
           </Link>
           <div className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
-            <SheetClose asChild>
-              <nav className="flex h-full flex-col gap-6 text-white-1">
-                {sidebarLinks.map(({ route, label, imgURL }, idx) => {
-                  const isActive =
-                    pathname === route || pathname.startsWith(`${route}/`);
-                  return (
-                    <SheetClose asChild key={route}>
-                      <Link
-                        href={route}
-                        key={idx}
-                        className={cn(
-                          "flex gap-3 items-center py-4 max-lg:px-4 justify-start",
-                          {
-                            "bg-nav-focus border-r-4 border-orange-1": isActive,
-                          }
-                        )}
-                      >
-                        <Image
-                          src={imgURL}
-                          alt={label}
-                          width={24}
-                          height={24}
-                        />
-                        <p>{label}</p>
-                      </Link>
-                    </SheetClose>
-                  );
-                })}
-              </nav>
-            </SheetClose>
+            <nav className="flex h-full flex-col gap-6 text-white-1">
+              {sidebarLinks.map(({ route, label, imgURL }, idx) => {
+                const isActive =
+                  pathname === route || pathname.startsWith(`${route}/`);
+                return (
+                  <SheetClose asChild key={route}>
+                    <Link
+                      href={route}
+                      key={idx}
+                      className={cn(
+                        "flex gap-3 items-center py-4 max-lg:px-4 justify-start",
+                        {
+                          "bg-nav-focus border-r-4 border-orange-1": isActive,
+                        }
+                      )}
+                    >
+                      <Image src={imgURL} alt={label} width={24} height={24} />
+                      <p>{label}</p>
+                    </Link>
+                  </SheetClose>
+                );
+              })}
+              <SignedIn>
+                <Link
+                  href={`/profile/${user?.user?.id}`}
+                  className={cn(
+                    "flex gap-3 items-center py-4 max-lg:px-4 justify-start",
+                    {
+                      "bg-nav-focus border-r-4 border-orange-1":
+                        pathname === "/profile" ||
+                        pathname.startsWith("/profile/"),
+                    }
+                  )}
+                >
+                  <Image
+                    src="/icons/profile.svg"
+                    alt="profile"
+                    width={24}
+                    height={24}
+                  />
+                  <p>Profile</p>
+                </Link>
+              </SignedIn>
+            </nav>
           </div>
         </SheetContent>
       </Sheet>
