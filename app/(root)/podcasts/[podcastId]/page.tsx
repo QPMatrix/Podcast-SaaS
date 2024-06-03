@@ -1,7 +1,7 @@
 "use client";
 import EmptyState from "@/components/empty-state";
 import PodcastCard from "@/components/podcast-card";
-import PodcastDetailsPlayer from "@/components/podcast-detail-player";
+import PodcastDetailPlayer from "@/components/podcast-detail-player";
 import LoaderSpinner from "@/components/spinner";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -36,10 +36,17 @@ const Page = ({
           <h2 className="text-16 font-bold text-white-1">{podcast?.views}</h2>
         </figure>
       </header>
-      <PodcastDetailsPlayer
-        isOwner={isOwner!}
-        podcastId={podcast._id!}
-        {...podcast!}
+      <PodcastDetailPlayer
+        isOwner={isOwner}
+        podcastId={podcast._id}
+        imageUrl={podcast.imageUrl!}
+        authorImageUrl={podcast.authorImageUrl}
+        author={podcast.author}
+        authorId={podcast.authorId}
+        podcastTitle={podcast.podcastTitle!}
+        audioUrl={podcast.audioUrl!}
+        imageStorageId={podcast.imageStorageId!}
+        audioStorageId={podcast.audioStorageId!}
       />
       <p className="text-white-2 text-16 pb-8 pt-[45px] font-medium max-md:text-center">
         {podcast?.podcastDescription}

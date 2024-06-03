@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import ConvexClerkProvider from "@/provider/convex-clerk-client";
+import AudioProvider from "@/provider/audio-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "AetherCastr",
@@ -19,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ConvexClerkProvider>{children}</ConvexClerkProvider>
-      </body>
-    </html>
+    <ConvexClerkProvider>
+      <html lang="en">
+        <AudioProvider>
+          <body className={manrope.className}>{children}</body>
+        </AudioProvider>
+      </html>
+    </ConvexClerkProvider>
   );
 }
