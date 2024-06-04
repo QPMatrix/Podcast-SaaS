@@ -7,6 +7,8 @@ import { PodcastProps, ProfileCardProps } from "@/types";
 
 import LoaderSpinner from "./spinner";
 import { Button } from "./ui/button";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const ProfileCard = ({
   podcastData,
@@ -14,7 +16,7 @@ const ProfileCard = ({
   userFirstName,
 }: ProfileCardProps) => {
   const { setAudio } = useAudio();
-
+  const updatePodcastView = useMutation(api.podcast.updatePodcastViews);
   const [randomPodcast, setRandomPodcast] = useState<PodcastProps | null>(null);
 
   const playRandomPodcast = () => {
@@ -25,6 +27,7 @@ const ProfileCard = ({
 
   useEffect(() => {
     if (randomPodcast) {
+      updatePodcastView({ podcastId: randomPodcast._id });
       setAudio({
         title: randomPodcast.podcastTitle,
         audioUrl: randomPodcast.audioUrl || "",

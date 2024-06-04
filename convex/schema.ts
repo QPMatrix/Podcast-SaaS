@@ -28,5 +28,7 @@ export default defineSchema({
     imageUrl: v.string(),
     clerkId: v.string(),
     name: v.string(),
+    payment_plan_id: v.optional(v.string()),
+    payment_id: v.optional(v.string()),
   }),
 });
